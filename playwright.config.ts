@@ -43,6 +43,21 @@ export default defineConfig({
       name: 'firefox',
       use: { ...devices['Desktop Firefox'] },
     },
+    // 1. Define the Authentication Setup phase
+    {
+      name: 'setup',
+      testMatch: /auth\.setup\.ts/,
+    },
+    // 2. Configure the main Chromium browser project to depend on that setup
+    {
+      name: 'chromium',
+      use: {
+        ...devices['Desktop Chrome'],
+        // Tell this project to inject the pre-saved session state
+        storageState: 'playwright/.auth/user.json',
+      },
+      dependencies: ['setup'], // Forces setup to run first!
+    },
     /* Muted locally due to macOS hardware constraints
     // {
     //   name: 'webkit',
