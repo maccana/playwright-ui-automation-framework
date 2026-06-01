@@ -26,6 +26,7 @@ export default defineConfig({
   reporter: [['line'], ['html', { open: 'never' }]],
   
   use: {
+    baseURL: 'https://practicesoftwaretesting.com',
     trace: 'on-first-retry',
     // 2. Add this line to automatically snap screenshots on failures
     screenshot: 'only-on-failure',
