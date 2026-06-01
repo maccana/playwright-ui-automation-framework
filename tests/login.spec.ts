@@ -25,6 +25,13 @@ test.describe('User Authentication Suite', () => {
     // Act: Feed the login method data straight out of our JSON fixture
     await loginPage.login(testData.validUser.email, testData.validUser.password);
 
+    // Print all cookies currently stored in the browser context
+    console.log(await page.context().cookies());
+
+    // Print all localStorage items
+    const localStorageData = await page.evaluate(() => JSON.stringify(localStorage));
+    console.log('Local Storage Data:', localStorageData);
+
     // Assert: Verify that the user lands on the protected dashboard/profile page
     const pageHeader = page.locator('h1[data-test="page-title"]');
     await expect(pageHeader).toBeVisible();
