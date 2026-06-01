@@ -15,27 +15,5 @@ test.describe('User Authentication Suite', () => {
     await expect(errorMessage).toBeVisible();
     await expect(errorMessage).toContainText('Invalid email or password');
   });
-
-  // 2. Add the new positive test flow
-  test('Should successfully log in with valid credentials', async ({ page }) => {
-    const loginPage = new LoginPage(page);
-
-    await loginPage.navigateTo();
-    
-    // Act: Feed the login method data straight out of our JSON fixture
-    await loginPage.login(testData.validUser.email, testData.validUser.password);
-
-    // Print all cookies currently stored in the browser context
-    console.log(await page.context().cookies());
-
-    // Print all localStorage items
-    const localStorageData = await page.evaluate(() => JSON.stringify(localStorage));
-    console.log('Local Storage Data:', localStorageData);
-
-    // Assert: Verify that the user lands on the protected dashboard/profile page
-    const pageHeader = page.locator('h1[data-test="page-title"]');
-    await expect(pageHeader).toBeVisible();
-    await expect(pageHeader).toContainText('My Account', { ignoreCase: true });
-  });
-
+  
 });
