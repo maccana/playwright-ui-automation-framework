@@ -1,13 +1,29 @@
 import { test, expect } from '@playwright/test';
+import testData from '../fixtures/test-data.json';
 
-test.describe('Protected Catalog Space', () => {
-  test('Should directly access protected inventory space using saved state', async ({ page }) => {
-    // Go directly to the protected inventory page
-    await page.goto('/inventory.html');
+test.describe('Data-Driven Catalog Validations', () => {
+  
+  for (const user of testData.userProfiles) {
+    test.describe(`Session Context: ${user.type.toUpperCase()}`, () => {
+      
+      // Inject the specific storage state generated during the setup phase
+      test.use({ storageState: `playwright/.auth/${user.type}.json` });
 
-    // Assert: Verify we are logged in automatically by checking the SauceDemo title element
-    const pageHeader = page.locator('[data-test="title"]');
-    await expect(pageHeader).toBeVisible();
-    await expect(pageHeader).toHaveText('Products');
-  });
+      test(`Validate catalog load state for ${user.username}`, async ({ page }) => {
+        await page.goto('/inventory.html');
+
+        const pageHeader = page.locator('[data-test="title"]');
+        await expect(pageHeader).toBeVisible();
+        await expect(pageHeader).toHaveText('Products');
+
+        // Mid-level assertion touch: Verify product items are actually rendering on screen
+        const inventoryItems = page.locator('[data-test="inventory-item"]');
+        if (user.shouldSeeProducts) {
+          await expect(inventoryItems.first()).toBeVisible();
+          const count = await inventoryItems.count();
+          expect(count).toBeGreaterThan(0);
+        }
+      });
+    });
+  }
 });
