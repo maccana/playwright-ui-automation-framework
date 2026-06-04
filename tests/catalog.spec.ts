@@ -1,19 +1,13 @@
 import { test, expect } from '@playwright/test';
 
-test.describe('E-commerce Catalog & Profile Verifications', () => {
+test.describe('Protected Catalog Space', () => {
+  test('Should directly access protected inventory space using saved state', async ({ page }) => {
+    // Go directly to the protected inventory page
+    await page.goto('/inventory.html');
 
-  test('Should directly access protected account space without manually logging in', async ({ page }) => {
-    // Navigate straight to the profile page bypass
-    // Before: await page.goto('https://practicesoftwaretesting.com/');
-    await page.goto('/'); 
-
-    // Before: await page.goto('https://practicesoftwaretesting.com/account');
-    await page.goto('/account');
-
-    // Assert: We are already logged in automatically because of our global state injection!
-    const pageHeader = page.locator('h1[data-test="page-title"]');
+    // Assert: Verify we are logged in automatically by checking the SauceDemo title element
+    const pageHeader = page.locator('[data-test="title"]');
     await expect(pageHeader).toBeVisible();
-    await expect(pageHeader).toContainText('My Account', { ignoreCase: true });
+    await expect(pageHeader).toHaveText('Products');
   });
-
 });

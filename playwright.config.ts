@@ -25,13 +25,13 @@ export default defineConfig({
   // 1. Change this line to include both the terminal ('line') and the interactive HTML view
   reporter: [['line'], ['html', { open: 'never' }]],
   
+  // Inside playwright.config.ts
   use: {
-    baseURL: 'https://practicesoftwaretesting.com',
+    baseURL: 'https://www.saucedemo.com',
     trace: 'on-first-retry',
-    // 2. Add this line to automatically snap screenshots on failures
     screenshot: 'only-on-failure',
   },
-
+  
   /* Configure projects for major browsers */
   projects: [
     // 1. Setup Phase: ONLY targets the .setup.ts file
