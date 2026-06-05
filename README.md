@@ -1,3 +1,4 @@
 # Playwright UI Automation Framework
 
-## Overview - todo
+## Overview
+Playwright automation project
