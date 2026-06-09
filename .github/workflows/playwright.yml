@@ -1,0 +1,41 @@
+name: Playwright Regression Pipeline
+
+# Trigger the workflow on every push or pull request to the main branch
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  regression-test:
+    name: Execute Automated Suite
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code Repository
+      uses: actions/checkout@v4
+
+    - name: Initialize Node.js Environment
+      uses: actions/setup-node@v4
+      with:
+        node-version: lts/*
+        cache: 'npm'
+
+    - name: Install Project Dependencies
+      run: npm ci
+
+    - name: Install Headless Playwright Browsers
+      run: npx playwright install --with-deps chromium
+
+    - name: Execute Framework Tests
+      run: npx playwright test --project=chromium
+
+    # Mid-Level Observability: Secure the html report artifact if a failure occurs
+    - name: Archive Execution Artifacts
+      uses: actions/upload-artifact@v4
+      if: ${{ !cancelled() }}
+      with:
+        name: playwright-execution-report
+        path: playwright-report/
+        retention-days: 7
